@@ -1,1 +1,1 @@
-rainbows faye.ru -E production -p 9000 -D
+rainbows ./faye.ru -c ./rainbows.conf -E production -p 9000

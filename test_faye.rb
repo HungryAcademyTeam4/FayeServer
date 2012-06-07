@@ -2,9 +2,9 @@ require 'faye'
 require 'eventmachine'
 
   EM.run {
-    client = Faye::Client.new('http://fallinggarden.com:9000/faye')
-    client.subscribe('/1') do |message|
+    client = Faye::Client.new('http://localhost:9000/faye')
+    client.subscribe('/room') do |message|
       puts message.inspect
     end
-    client.publish('/1', 'text' => 'It works (for reals)!')
+    client.publish('/room', message: {'text' => 'It works (for reals)!'})
   }
