@@ -16,7 +16,7 @@ set :deploy_via, :remote_cache
 set :use_sudo, true
 
 set :scm, "git"
-set :repository,  "git://github.com/HungryAcademyTeam4/Authbot.git"
+set :repository,  "git://github.com/HungryAcademyTeam4/FayeServer.git"
 set :branch, "master"
 
 default_run_options[:pty] = true
