@@ -1,0 +1,1 @@
+rackup faye.ru -s thin -E production -p 9000
