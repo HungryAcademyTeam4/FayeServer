@@ -6,5 +6,5 @@ require 'eventmachine'
     client.subscribe('/1') do |message|
       puts message.inspect
     end
-    client.publish('/1', 'text' => 'It works!')
+    client.publish('/1', 'text' => 'It works (for reals)!')
   }

@@ -1,1 +1,1 @@
-rackup faye.ru -s thin -E production -p 9000
+rainbows faye.ru -E production -p 9000 -D
