@@ -1,4 +1,4 @@
-MODE = "staging"
+MODE = "production"
 PRODUCTION_SERVER = "fallingfoundry.com"
 STAGING_SERVER = "fallinggarden.com"
 SERVER = MODE == "production" ? PRODUCTION_SERVER : STAGING_SERVER
@@ -8,7 +8,7 @@ $:.unshift(File.expand_path('./lib', ENV['rvm_path']))
  require 'bundler/capistrano'
  require 'rvm/capistrano'
 server SERVER, :web, :db, :app, primary: true
-set :user, "deployer"
+set :user, "root"
 set :application, "FayeServer"
 
 set :deploy_to, "/home/#{user}/apps/#{application}"
@@ -25,7 +25,7 @@ ssh_options[:forward_agent] = true
 
 
 namespace :deploy do
-  task :start do   
+  task :start do
     run "cd /home/#{user}/apps/#{application}/current && ./start.sh"
   end
   after "deploy", "deploy:start"
