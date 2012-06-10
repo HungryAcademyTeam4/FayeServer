@@ -11,7 +11,7 @@ server SERVER, :web, :db, :app, primary: true
 set :user, "root"
 set :application, "FayeServer"
 
-set :deploy_to, "/home/#{user}/apps/#{application}"
+set :deploy_to, "/apps/#{application}"
 set :deploy_via, :remote_cache
 set :use_sudo, true
 
@@ -25,8 +25,14 @@ ssh_options[:forward_agent] = true
 
 
 namespace :deploy do
-  task :start do
-    run "cd /home/#{user}/apps/#{application}/current && ./start.sh"
+  task :mkdirs do
+    run "mkdir /apps/#{application}/releases/current -p"
+    run "mkdir /apps/god_scripts -p"
   end
+  task :start do
+    run "cd /apps/#{application}/current && bundle install --system"
+    run "cd /apps/#{application}/current && ./start.sh"
+  end
+  before "deploy", "deploy:mkdirs"
   after "deploy", "deploy:start"
 end
