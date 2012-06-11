@@ -48,6 +48,13 @@ namespace :deploy do
     run "cd / && god load apps/god_scripts/faye.rb"
     run "cd / && god start faye"
   end
+  task :stop do
+    run "cd / && god stop faye"
+  end
+  task :restart do
+    stop
+    start
+  end
   before "deploy", "deploy:mkdirs"
   before "deploy", "deploy:create_god_script"
   after "deploy", "deploy:bundle"
