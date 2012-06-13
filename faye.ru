@@ -1,15 +1,23 @@
 require 'faye'
+require 'redis'
+require 'json'
 
-class Debugger
+class Broadcaster
+  
+  def initialize
+    @redis = Redis.new(:host => '127.0.0.1', :port => 6379)
+  end
+
   def incoming(msg, callback)
     puts msg
+    puts msg["data"]
+    @redis.publish("conquerapp", {msg: msg}.to_json) if msg["data"]
     callback.call(msg)
   end
 end
 
-#Faye::WebSocket.load_adapter('thin')
+Faye::WebSocket.load_adapter('rainbows')
 
 faye_server = Faye::RackAdapter.new(:mount => '/faye', :timeout => 45)
-faye_server.add_extension(Debugger.new)
+faye_server.add_extension(Broadcaster.new)
 run faye_server
-
