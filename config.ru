@@ -22,6 +22,12 @@ class Announcer
   end
  
   def incoming(msg, callback)
+  puts "*****\n\n\n\n"
+
+  puts msg.inspect
+  puts msg["introduction"]
+  puts msg["channel"]
+  puts "*****\n\n\n\n"
     if msg["introduction"]
       @redis.set(msg[:client_id], msg[:user_name])
       @connection.post do |req|
