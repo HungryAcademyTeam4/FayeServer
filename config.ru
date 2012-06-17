@@ -31,7 +31,7 @@ def incoming(msg, callback)
   puts "*******************************************************\n\n\n\n"
     if msg["data"] && msg["data"]["introduction"]
       @redis.set(msg[:client_id], msg[:user_name])
-      url = 'http://fallinggarden.com:9000/faye'
+      url = 'http://localhost:9000/faye'
   body = {
           channel: msg["channel"],
           data: {
@@ -46,7 +46,7 @@ def incoming(msg, callback)
 
 #    if msg["channel"].split('/').last == "disconnect"
 #      user_name = @redis.get[:client_id]
-#        url = 'http://fallinggarden.com:9000/faye'
+#        url = 'http://localhost.com:9000/faye'
 #        body = {
 #          channel: "/#{@chat_room.id}",
 #          data: {
