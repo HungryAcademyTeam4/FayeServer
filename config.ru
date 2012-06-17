@@ -50,13 +50,13 @@ def incoming(msg, callback)
 #        body = {
 #          channel: "/#{@chat_room.id}",
 #          data: {
-##          chat_room_id: @chat_room.id,
- #         user_name: "System",
+#          chat_room_id: @chat_room.id,
+#          user_name: "System",
 #          content: "#{user_name} has left the room."
- #       }
+#        }
 #      }
-      Net::HTTP.post_form(URI.parse(url), message: body.to_json)
-    end
+#      Net::HTTP.post_form(URI.parse(url), message: body.to_json)
+#    end
     callback.call(msg)
   end
 end
