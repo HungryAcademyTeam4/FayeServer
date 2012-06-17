@@ -6,7 +6,7 @@ APPLICATION_NAME = "FayeServer"
 SCRIPT_NAME = "faye"
 REPOSITORY = "git://github.com/HungryAcademyTeam4/FayeServer.git"
 SERVER = MODE == "production" ? PRODUCTION_SERVER : STAGING_SERVER
-START_COMMAND = 'rainbows /apps/FayeServer/current/faye.ru -c /apps/FayeServer/current/rainbows.conf -E production -p 9000'
+START_COMMAND = 'cd /apps/FayeServer/current && thin start -e production -p 9000'
 
 $:.unshift(File.expand_path('./lib', ENV['rvm_path']))
 require 'rvm/capistrano'

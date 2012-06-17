@@ -10,7 +10,6 @@ class Broadcaster
 
   def incoming(msg, callback)
     puts msg
-    puts msg["data"]
     @redis.publish("conquerapp", {msg: msg}.to_json) if msg["data"]
     callback.call(msg)
   end
