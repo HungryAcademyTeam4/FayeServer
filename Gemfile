@@ -2,6 +2,6 @@ source 'https://rubygems.org'
 
 gem 'faye'
 gem 'rack'
-gem 'rainbows'
+gem 'thin'
 gem 'redis'
 gem 'json'
