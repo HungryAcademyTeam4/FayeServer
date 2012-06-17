@@ -18,13 +18,17 @@ end
 
 class Announcer
   
+  def initialize
+    @redis = Redis.new(:host => '127.0.0.1', :port => 6379)
+  end
+
   def incoming(msg, callback)
-  puts "*****\n\n\n\n"
+  puts "*******************************************************\n\n\n\n"
 
   puts msg.inspect
   puts msg["introduction"]
   puts msg["channel"]
-  puts "*****\n\n\n\n"
+  puts "*******************************************************\n\n\n\n"
     if msg["introduction"]
       @redis.set(msg[:client_id], msg[:user_name])
       url = 'http://fallinggarden.com:9000/faye'
