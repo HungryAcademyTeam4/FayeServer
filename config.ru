@@ -22,38 +22,39 @@ class Announcer
     @redis = Redis.new(:host => '127.0.0.1', :port => 6379)
   end
 
-  def incoming(msg, callback)
-  puts "*******************************************************\n\n\n\n"
+def incoming(msg, callback)
+  puts "\n\n\n\n*******************************************************"
 
   puts msg.inspect
-  puts msg["introduction"]
+  puts msg["data"]["introduction"] rescue "no data"
   puts msg["channel"]
   puts "*******************************************************\n\n\n\n"
-    if msg["introduction"]
+    if msg["data"] && msg["data"]["introduction"]
       @redis.set(msg[:client_id], msg[:user_name])
       url = 'http://fallinggarden.com:9000/faye'
-        body = {
-          channel: "/#{@chat_room.id}",
+  body = {
+          channel: msg["channel"],
           data: {
-          chat_room_id: @chat_room.id,
+          chat_room_id: msg["channel"].split("/").last,
           user_name: "System",
           content: "#{msg[:user_name]} has entered the room."
         }
       }
+
       Net::HTTP.post_form(URI.parse(url), message: body.to_json)
     end
 
-    if msg["channel"].split('/').last == "disconnect"
-      user_name = @redis.get[:client_id]
-        url = 'http://fallinggarden.com:9000/faye'
-        body = {
-          channel: "/#{@chat_room.id}",
-          data: {
-          chat_room_id: @chat_room.id,
-          user_name: "System",
-          content: "#{user_name} has left the room."
-        }
-      }
+#    if msg["channel"].split('/').last == "disconnect"
+#      user_name = @redis.get[:client_id]
+#        url = 'http://fallinggarden.com:9000/faye'
+#        body = {
+#          channel: "/#{@chat_room.id}",
+#          data: {
+##          chat_room_id: @chat_room.id,
+ #         user_name: "System",
+#          content: "#{user_name} has left the room."
+ #       }
+#      }
       Net::HTTP.post_form(URI.parse(url), message: body.to_json)
     end
     callback.call(msg)
