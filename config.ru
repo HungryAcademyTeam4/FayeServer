@@ -22,42 +22,27 @@ class Announcer
     @redis = Redis.new(:host => '127.0.0.1', :port => 6379)
   end
 
-def incoming(msg, callback)
-  puts "\n\n\n\n*******************************************************"
+  def incoming(msg, callback)
+    puts "\n\n\n\n*******************************************************"
 
-  puts msg.inspect
-  puts msg["data"]["introduction"] rescue "no data"
-  puts msg["channel"]
-  puts "*******************************************************\n\n\n\n"
-    if msg["data"] && msg["data"]["introduction"]
-      @redis.set(msg[:client_id], msg[:user_name])
-      url = 'http://localhost:9000/faye'
-  body = {
+    puts msg.inspect
+    puts msg["data"]["introduction"] rescue "no data"
+    puts msg["channel"]
+    puts "*******************************************************\n\n\n\n"
+      if msg["data"] && msg["data"]["introduction"]
+        @redis.set(msg[:client_id], msg[:user_name])
+        url = 'http://localhost:9000/faye'
+        body = {
           channel: msg["channel"],
           data: {
-          chat_room_id: msg["channel"].split("/").last,
-          user_name: "System",
-          content: "#{msg[:user_name]} has entered the room."
+            chat_room_id: msg["channel"].split("/").last,
+            user_name: "System",
+            content: "#{msg[:user_name]} has entered the room."
+          }
         }
-      }
-
-      Net::HTTP.post_form(URI.parse(url), message: body.to_json)
+        Net::HTTP.post_form(URI.parse(url), message: body.to_json)
+      end
     end
-
-#    if msg["channel"].split('/').last == "disconnect"
-#      user_name = @redis.get[:client_id]
-#        url = 'http://localhost.com:9000/faye'
-#        body = {
-#          channel: "/#{@chat_room.id}",
-#          data: {
-#          chat_room_id: @chat_room.id,
-#          user_name: "System",
-#          content: "#{user_name} has left the room."
-#        }
-#      }
-#      Net::HTTP.post_form(URI.parse(url), message: body.to_json)
-#    end
-    callback.call(msg)
   end
 end
 
@@ -65,6 +50,6 @@ Faye::WebSocket.load_adapter('thin')
 
 faye_server = Faye::RackAdapter.new(:mount => '/faye', :timeout => 45)
 faye_server.add_extension(Broadcaster.new)
-faye_server.add_extension(Announcer.new)
+# faye_server.add_extension(Announcer.new)
 
 run faye_server
