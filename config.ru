@@ -20,6 +20,7 @@ class Announcer
   
   def initialize
     @redis = Redis.new(:host => '127.0.0.1', :port => 6379)
+    @faye_client = Faye::Client.new('http://localhost:9000/faye')
   end
 
   def incoming(msg, callback)
@@ -29,20 +30,20 @@ class Announcer
     puts msg["data"]["introduction"] rescue "no data"
     puts msg["channel"]
     puts "*******************************************************\n\n\n\n"
-      if msg["data"] && msg["data"]["introduction"]
-        @redis.set(msg[:client_id], msg[:user_name])
-        url = 'http://localhost:9000/faye'
-        body = {
-          channel: msg["channel"],
-          data: {
-            chat_room_id: msg["channel"].split("/").last,
-            user_name: "System",
-            content: "#{msg[:user_name]} has entered the room."
-          }
-        }
-        Net::HTTP.post_form(URI.parse(url), message: body.to_json)
-      end
+    if msg["data"] && msg["data"]["introduction"]
+      body = get_body_from_msg(msg)
+      @faye_client.publish(msg["channel"], { message: body } )
     end
+  end
+
+  def get_body_from_msg(msg)
+    { channel: msg["channel"],
+      data: {
+              chat_room_id: msg["channel"].split("/").last,
+              user_name: "System",
+              content: "#{msg[:user_name]} has entered the room."
+            }
+    }
   end
 end
 
