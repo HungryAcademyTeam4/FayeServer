@@ -52,6 +52,6 @@ Faye::WebSocket.load_adapter('thin')
 
 faye_server = Faye::RackAdapter.new(:mount => '/faye', :timeout => 45)
 faye_server.add_extension(Broadcaster.new)
-faye_server.add_extension(Announcer.new)
+#faye_server.add_extension(Announcer.new)
 
 run faye_server
