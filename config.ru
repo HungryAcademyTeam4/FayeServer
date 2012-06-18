@@ -33,6 +33,7 @@ class Announcer
     if msg["data"] && msg["data"]["introduction"]
       body = get_body_from_msg(msg)
       @faye_client.publish(msg["channel"], body)
+      return nil
     end
     callback.call(msg)
   end
