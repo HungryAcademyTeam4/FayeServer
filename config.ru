@@ -17,10 +17,10 @@ class Broadcaster
 end
 
 class Announcer
-  
+
   def initialize
     @redis = Redis.new(:host => '127.0.0.1', :port => 6379)
-    @faye_client = Faye::Client.new('http://localhost:9000/faye')
+    @faye_client = Faye::Client.new('http://fallinggarden.com:9000/faye')
   end
 
   def incoming(msg, callback)
@@ -32,20 +32,20 @@ class Announcer
     puts "*******************************************************\n\n\n\n"
     if msg["data"] && msg["data"]["introduction"]
       body = get_body_from_msg(msg)
-      @faye_client.publish(msg["channel"], { message: body } )
+      @faye_client.publish(msg["channel"], body)
     end
+    callback.call(msg)
   end
 
   def get_body_from_msg(msg)
-    { channel: msg["channel"],
-      data: {
-              chat_room_id: msg["channel"].split("/").last,
-              user_name: "System",
-              content: "#{msg[:user_name]} has entered the room."
-            }
-    }
+      {
+       chat_room_id: msg["channel"].split("/").last,
+       user_name: "System",
+       content: "#{msg["data"]["user_name"]} has entered the room."
+      }
   end
 end
+
 
 Faye::WebSocket.load_adapter('thin')
 
